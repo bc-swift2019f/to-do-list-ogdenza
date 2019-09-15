@@ -10,11 +10,8 @@ import UIKit
 
 class ViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
-    
     @IBOutlet weak var editBarButton: UIBarButtonItem!
-    
     @IBOutlet weak var addBarButton: UIBarButtonItem!
-    
     
     var toDoArray = ["Learn Swift", "Build Apps", "Change the World!"]
     
@@ -25,7 +22,7 @@ class ViewController: UIViewController {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "Edit Item" {
+        if segue.identifier == "EditItem" {
             let destination = segue.destination as! DetailViewController
             let index = tableView.indexPathForSelectedRow!.row
             destination.toDoItem = toDoArray[index]
@@ -47,11 +44,11 @@ class ViewController: UIViewController {
                 toDoArray.append(sourceViewController.toDoItem!)
                 tableView.insertRows(at: [newIndexPath], with: .automatic)
                 
-            }
         }
+    }
 
     @IBAction func editBarButtonPressed(_ sender: UIBarButtonItem) {
-        if tableView.isEditing{
+        if tableView.isEditing {
             tableView.setEditing(false, animated: true)
             addBarButton.isEnabled = true
             editBarButton.title = "Edit"
@@ -60,6 +57,21 @@ class ViewController: UIViewController {
             addBarButton.isEnabled = false
             editBarButton.title = "Done"
         }
+    }
+}
+    
+
+
+extension ViewController: UITableViewDelegate, UITableViewDataSource {
+    
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return toDoArray.count
+    }
+    
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
+        cell.textLabel?.text = toDoArray[indexPath.row]
+        return cell
     }
     
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -73,20 +85,6 @@ class ViewController: UIViewController {
         let itemToMove = toDoArray[sourceIndexPath.row]
         toDoArray.remove(at: sourceIndexPath.row)
         toDoArray.insert(itemToMove, at: destinationIndexPath.row)
-        
-    }
-}
-    
-
-
-extension ViewController: UITableViewDelegate, UITableViewDataSource {
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return toDoArray.count
-    }
-    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
-        cell.textLabel?.text = toDoArray[indexPath.row]
-        return cell
     }
 }
     
